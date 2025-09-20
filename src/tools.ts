@@ -287,8 +287,9 @@ async function playItemCallback({ uri, contextUri }: PlayItemParameters): Promis
         if (!activeDevice?.id) {
             return 'No active device found. Start a Spotify client on a device.';
         }
-        const uris = uri ? [uri] : void 0;
-        await api.player.startResumePlayback(activeDevice.id, contextUri, uris);
+        const uris = uri && !contextUri ? [uri] : void 0;
+        const offset = uri && contextUri ? { uri } : void 0;
+        await api.player.startResumePlayback(activeDevice.id, contextUri, uris, offset);
         return `Playback started on device: ${activeDevice?.name}`;
     } catch (error) {
         console.error('Error queuing track:', error);
